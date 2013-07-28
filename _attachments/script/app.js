@@ -12,11 +12,12 @@ $(document).ready(function(){
         formdata["odometer"]=$("#odometer").val();
         formdata["amount"]=$("#amount").val();
         formdata["price"]=$("#price").val();
-                       
+        
+        
                       
         $.ajax({
             type: "POST",
-            url: "http://localhost:5984/car/",
+            url: "../../",
             data: JSON.stringify(formdata),
             success: dataTransmitted,
             dataType: "json", 
@@ -34,7 +35,7 @@ $(document).ready(function(){
 var dataTransmitted = function (data, status) {
     if (status == "success")
     {
-        if (data["ok") {
+        if (data["ok"]) {
             resetForm();
         }
         else {
