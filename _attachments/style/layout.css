@@ -5,3 +5,28 @@ body{
     margin:0px;
     text-align: center;
 }
+
+.vertical {
+        vertical-align: middle;
+}
+
+
+#addrefueling{
+    width: 250px;
+    margin: 0 auto;
+    text-align:left;
+}
+
+
+P {
+    margin: 0px;
+}
+
+input {
+    width:100px;
+    
+}
+
+.submit {
+    width: 100%;
+}
