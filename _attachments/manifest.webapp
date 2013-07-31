@@ -1,0 +1,17 @@
+{
+    "name": "Refueling",
+    "description": "Make statistics on your gas consumption.",
+    "launch_path": "/refueling/_design/car/index.html",
+    "icons": {
+        "16": "/refueling/_design/car/images/gas_station_16x16.png",
+        "32": "/refueling/_design/car/images/gas_station_32x32.png",
+        "64": "/refueling/_design/car/images/gas_station_64x64.png",
+        "128": "/refueling/_design/car/images/gas_station_128x128.png",
+        "256": "/refueling/_design/car/images/gas_station_256x256.png"
+    },
+    "developer": {
+        "name": "Sven Klomp",
+        "url": ""
+    },
+    "default_locale": "en"
+}
