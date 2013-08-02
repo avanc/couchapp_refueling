@@ -1,6 +1,40 @@
 $(document).ready(function(){
     $("#tabs" ).tabs();
+    $("#accordion").accordion();
     $("#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", autoSize: true });
+
+    
+    var d = [[-373597200000, 315.71], [-370918800000, 317.45], [-368326800000, 317.50], [-363056400000, 315.86], [-360378000000, 314.93]]; 
+                
+    
+
+    $.plot("#statistics_consumption", [d], {
+        series: {
+            lines: { show: true },
+            points: { show: true }
+        },
+        xaxis: {
+            mode: "time",
+            //zoomRange: [0.1, 10],
+            //panRange: [-10, 10],
+            //font :  {
+            //      size:10,
+            //      color: "#000000"
+            //}
+        },
+        yaxis: {
+            zoomRange: [1, 1],
+            panRange: [300, 400]
+        },
+        zoom: {
+            interactive: true
+        },
+        pan: {
+            interactive: true
+        }
+    });
+
+    
     
     resetForm();
     

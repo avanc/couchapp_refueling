@@ -30,3 +30,11 @@ input {
 .submit {
     width: 100%;
 }
+
+.flot-tick-label {
+    font-size:0.7em;
+}
+
+.plots {
+    height:150px;
+}

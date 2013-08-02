@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" href="style/layout.css">
     <script src="script/jquery-2.0.3.js" type="text/javascript"></script>
     <script src="script/jquery-ui-1.10.3.custom.js" type="text/javascript"></script>
+    <script src="script/jquery.flot.js" type="text/javascript"></script>
+    <script src="script/jquery.flot.time.js" type="text/javascript"></script>
+    <script src="script/jquery.flot.navigate.js" type="text/javascript"></script>
     <script src="script/app.js" type="text/javascript"></script>
     <script type="text/javascript">
      $(function() {
@@ -22,7 +25,20 @@
             <li><a href="#addrefueling">Add Refueling</a></li>
         </ul>
         <div id="statistics">
-            
+            <div id="accordion">
+                <h3>Consumption</h3>
+                <div>
+                    <div id="statistics_consumption" class="plots"></div>
+                </div>
+
+                <h3>Price</h3>
+                <div style="background:#123456">
+                </div>
+
+                <h3>Distance</h3>
+                <div>
+                </div>
+            </div>
         </div>
         <div id="addrefueling">
             <form id="refuel_form" action="" novalidate>
