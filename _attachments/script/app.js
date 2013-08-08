@@ -4,11 +4,86 @@ $(document).ready(function(){
     $("#datepicker" ).datepicker({ dateFormat: "yy-mm-dd", autoSize: true });
 
     
-    var d = [[-373597200000, 315.71], [-370918800000, 317.45], [-368326800000, 317.50], [-363056400000, 315.86], [-360378000000, 314.93]]; 
-                
-    
 
-    $.plot("#statistics_consumption", [d], {
+    
+    updateStatistics();
+    resetForm();
+    
+    $("#refuel_form").submit(sendFormData);
+
+
+    
+});
+
+function sendFormData() {
+    formdata={};
+    formdata["type"]="refuel";
+    formdata["date"]=$("#datepicker").val();
+    formdata["odometer"]=parseFloat($("#odometer").val());
+    formdata["amount"]=parseFloat($("#amount").val());
+    formdata["costs"]=parseFloat($("#price").val());
+                    
+    $.ajax({
+        type: "POST",
+        url: "../../",
+        data: JSON.stringify(formdata),
+        success: dataTransmitted,
+        dataType: "json", 
+        contentType:"application/json; charset=utf-8"
+    });
+
+    return false; //Prevent form action
+}
+
+
+function updateStatistics() {
+    $.ajax({
+        type: "GET",
+        url: "_view/by_date",
+        dataType: "json",
+        success: plotStatistics
+    });
+    
+}
+
+
+function getTimestamp(date) {
+    return (new Date(date)).getTime();
+    
+}
+
+function plotStatistics(data){
+    var docs=data["rows"];
+
+    var plotData={ consumption: [], price: [], distance: []};
+    
+    var distance
+    var consumption
+    
+    for (var i=0; i<docs.length; i++) {
+        currdoc=docs[i]["value"];
+        
+        plotData["price"].push([getTimestamp(currdoc["date"]), currdoc["costs"]/currdoc["amount"]]);
+        
+        if (i>0)
+        {
+            prevdoc=docs[i-1]["value"];
+
+            distance = currdoc["odometer"]-prevdoc["odometer"];
+            days=(getTimestamp(currdoc["date"])-getTimestamp(prevdoc["date"]))/1000/60/60/24;
+            distanceperday=distance/days;
+            consumption= currdoc["amount"]/distance*100;
+            
+            plotData["consumption"].push([getTimestamp(prevdoc["date"]), consumption]);
+            plotData["consumption"].push([getTimestamp(currdoc["date"]), consumption]);
+
+            plotData["distance"].push([getTimestamp(prevdoc["date"]), distanceperday]);
+            plotData["distance"].push([getTimestamp(currdoc["date"]), distanceperday]);
+        }
+    }
+
+    
+    $.plot("#statistics_consumption", [plotData["consumption"]], {
         series: {
             lines: { show: true },
             points: { show: true }
@@ -23,8 +98,28 @@ $(document).ready(function(){
             //}
         },
         yaxis: {
-            zoomRange: [1, 1],
-            panRange: [300, 400]
+            //zoomRange: [1, 1],
+            //panRange: [300, 400]
+        },
+        zoom: {
+            interactive: true
+        },
+        pan: {
+            interactive: true
+        }
+    });
+    
+    $.plot("#statistics_price", [plotData["price"]], {
+        series: {
+            lines: { show: true },
+            points: { show: true }
+        },
+        xaxis: {
+            mode: "time"
+        },
+        yaxis: {
+            //zoomRange: [1, 1],
+            //panRange: [300, 400]
         },
         zoom: {
             interactive: true
@@ -34,36 +129,26 @@ $(document).ready(function(){
         }
     });
 
-    
-    
-    resetForm();
-    
-    $("#refuel_form").submit(function() {
-        
-        formdata={};
-        formdata["type"]="refuel";
-        formdata["date"]=$("#datepicker").val();
-        formdata["odometer"]=$("#odometer").val();
-        formdata["amount"]=$("#amount").val();
-        formdata["price"]=$("#price").val();
-        
-        
-                      
-        $.ajax({
-            type: "POST",
-            url: "../../",
-            data: JSON.stringify(formdata),
-            success: dataTransmitted,
-            dataType: "json", 
-            contentType:"application/json; charset=utf-8"
-        });
-
-        return false; //Prevent form action
+    $.plot("#statistics_distance", [plotData["distance"]], {
+        series: {
+            lines: { show: true },
+            points: { show: true }
+        },
+        xaxis: {
+            mode: "time"
+        },
+        yaxis: {
+            //zoomRange: [1, 1],
+            //panRange: [300, 400]
+        },
+        zoom: {
+            interactive: true
+        },
+        pan: {
+            interactive: true
+        }
     });
-
-
-    
-});
+}
 
 
 var dataTransmitted = function (data, status) {
@@ -71,6 +156,7 @@ var dataTransmitted = function (data, status) {
     {
         if (data["ok"]) {
             resetForm();
+            updateStatistics();
         }
         else {
             alert(data);
