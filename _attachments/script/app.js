@@ -77,6 +77,8 @@ function plotStatistics(data){
     
     var distance
     var consumption
+    var currdoc
+    var prevdoc=docs[0]["value"]
     
     for (var i=0; i<docs.length; i++) {
         currdoc=docs[i]["value"];
@@ -85,18 +87,25 @@ function plotStatistics(data){
         
         if (i>0)
         {
-            prevdoc=docs[i-1]["value"];
+            distance = docs[i]["value"]["odometer"]-docs[i-1]["value"]["odometer"];
+            consumption= docs[i]["value"]["amount"]/distance*100;
+            plotData["consumption"].push([getTimestamp(docs[i-1]["value"]["date"]), consumption]);
+            plotData["consumption"].push([getTimestamp(docs[i]["value"]["date"]), consumption]);
 
-            distance = currdoc["odometer"]-prevdoc["odometer"];
-            days=(getTimestamp(currdoc["date"])-getTimestamp(prevdoc["date"]))/1000/60/60/24;
-            distanceperday=distance/days;
-            consumption= currdoc["amount"]/distance*100;
+            if (docs[i]["value"]["date"]!=prevdoc["date"])
+            {
+
+                distance = docs[i]["value"]["odometer"]-prevdoc["odometer"];
+                days=(getTimestamp(docs[i]["value"]["date"])-getTimestamp(prevdoc["date"]))/1000/60/60/24;
+                distanceperday=distance/days;
+                consumption= docs[i]["value"]["amount"]/distance*100;
             
-            plotData["consumption"].push([getTimestamp(prevdoc["date"]), consumption]);
-            plotData["consumption"].push([getTimestamp(currdoc["date"]), consumption]);
 
-            plotData["distance"].push([getTimestamp(prevdoc["date"]), distanceperday]);
-            plotData["distance"].push([getTimestamp(currdoc["date"]), distanceperday]);
+                plotData["distance"].push([getTimestamp(prevdoc["date"]), distanceperday]);
+                plotData["distance"].push([getTimestamp(docs[i]["value"]["date"]), distanceperday]);
+                prevdoc=docs[i]["value"];
+
+            }
         }
     }
 
